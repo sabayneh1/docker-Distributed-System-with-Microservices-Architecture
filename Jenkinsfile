@@ -3,6 +3,8 @@ pipeline {
 
     tools {
         nodejs "NodeJS-21.6.1"
+        // Provide the name of the Docker installation configured in Global Tool Configuration
+        dockerTool 'docker-automatic'
     }
 
     stages {
@@ -21,11 +23,8 @@ pipeline {
         stage('Docker Build') {
             steps {
                 script {
-                    // Run docker-compose to build services
-                    dir('path/to/your/docker-compose') {
-                        // Assume your docker-compose.yaml is in the same directory as your Jenkinsfile
-                        docker.build("DS")
-                    }
+                    // Assume your docker-compose.yaml is in the same directory as your Jenkinsfile
+                    docker.build("DS")
                 }
             }
         }
