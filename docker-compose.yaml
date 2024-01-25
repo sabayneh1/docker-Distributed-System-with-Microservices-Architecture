@@ -1,0 +1,15 @@
+version: '3'
+services:
+  auth-service:
+    build: ./auth-service
+    ports:
+      - "3001:3001"
+  user-service:
+    build: ./user-service
+    ports:
+      - "3002:3002"
+  product-service:
+    build: ./product-service
+    ports:
+      - "3003:3003"
+  # Add more services as needed
