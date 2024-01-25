@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools {
+        nodejs "NodeJS-21.6.1"
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -10,7 +14,7 @@ pipeline {
 
         stage('Install dependencies') {
             steps {
-                bat 'npm install'
+                sh 'npm install'
             }
         }
 
@@ -18,19 +22,17 @@ pipeline {
             steps {
                 script {
                     // Download and install Docker Compose
-                    bat 'curl -L https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Windows-x86_64.exe -o C:\\docker-compose.exe'
-                    bat 'icacls C:\\docker-compose.exe /grant Users:RX'
-                    bat 'set PATH=%PATH%;C:\\'
+                    powershell 'Invoke-WebRequest -Uri "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Windows-x86_64.exe" -OutFile "C:\\docker-compose.exe"'
+                    powershell 'setx PATH "$env:PATH;C:\\\"'
                 }
             }
         }
-
 
         stage('Docker Build') {
             steps {
                 script {
                     // Run docker-compose to build services
-                    bat 'docker-compose -f docker-compose.yaml build'
+                    sh 'docker-compose -f docker-compose.yaml build'
                 }
             }
         }
@@ -38,14 +40,15 @@ pipeline {
         stage('SonarQube analysis') {
             steps {
                 script {
-                    // Add your SonarQube analysis script here
-                    bat '''
-                    /var/jenkins_home/tools/hudson.plugins.sonar.SonarRunnerInstallation/SonarqUIBE/bin/sonar-scanner \
-                    -Dsonar.host.url=http://172.17.0.3:9000 \
-                    -Dsonar.login=squ_739cc1a8575faf7cbdef7d986da7e7deb4398824 \
-                    -Dsonar.projectKey=my_project_key\
-                    -Dsonar.projectBaseDir=/var/jenkins_home/workspace/MyProject
-                    '''
+                    withSonarQubeEnv('SonarQube Server') {
+                        sh '''
+                        /var/jenkins_home/tools/hudson.plugins.sonar.SonarRunnerInstallation/SonarqUIBE/bin/sonar-scanner \
+                        -Dsonar.host.url=http://172.17.0.3:9000 \
+                        -Dsonar.login=squ_739cc1a8575faf7cbdef7d986da7e7deb4398824 \
+                        -Dsonar.projectKey=my_project_key\
+                        -Dsonar.projectBaseDir=/var/jenkins_home/workspace/MyProject
+                        '''
+                    }
                 }
             }
         }
