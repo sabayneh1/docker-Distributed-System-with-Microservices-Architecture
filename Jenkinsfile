@@ -24,7 +24,7 @@ pipeline {
             steps {
                 script {
                     // Assume your docker-compose.yaml is in the same directory as your Jenkinsfile
-                    docker.build("DS")
+                    docker.build("ds")
                 }
             }
         }
