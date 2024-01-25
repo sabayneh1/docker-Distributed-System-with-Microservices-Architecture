@@ -37,6 +37,13 @@ pipeline {
             steps {
                 script {
                     // Add your SonarQube analysis script here
+                    bat '''
+                    /var/jenkins_home/tools/hudson.plugins.sonar.SonarRunnerInstallation/SonarqUIBE/bin/sonar-scanner \
+                    -Dsonar.host.url=http://172.17.0.3:9000 \
+                    -Dsonar.login=squ_739cc1a8575faf7cbdef7d986da7e7deb4398824 \
+                    -Dsonar.projectKey=my_project_key\
+                    -Dsonar.projectBaseDir=/var/jenkins_home/workspace/MyProject
+                    '''
                 }
             }
         }
