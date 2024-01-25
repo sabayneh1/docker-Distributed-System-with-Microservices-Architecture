@@ -9,7 +9,7 @@ pipeline {
 
     environment {
         // Define the Docker host environment variable
-        DOCKER_HOST = 'tcp://localhost:2375'
+        DOCKER_HOST = 'tcp://host.docker.internal:2375'
     }
 
     stages {
