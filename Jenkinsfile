@@ -3,14 +3,13 @@ pipeline {
 
     tools {
         nodejs "NodeJS-21.6.1"
-        // Provide the name of the Docker installation configured in Global Tool Configuration
-        // dockerTool 'docker-automatic'
+        dockerTool 'docker-automatic'
     }
 
-    // environment {
-    //     // Define the Docker host environment variable
-    //     DOCKER_HOST = 'tcp://host.docker.internal:2375'
-    // }
+    environment {
+        // Define the Docker host environment variable
+        DOCKER_HOST = 'tcp://host.docker.internal:2375'
+    }
 
     stages {
         stage('Checkout') {
@@ -25,22 +24,23 @@ pipeline {
             }
         }
 
-        // stage('Docker Build') {
-        //     steps {
-        //         script {
-        //             // Use the environment variable for the Docker host
-        //             docker.withServer("${env.DOCKER_HOST}") {
-        //                 // This assumes you have a Dockerfile in the root of your project
-        //                 docker.build("ds")
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Docker Build') {
+            steps {
+                script {
+                    // Use the environment variable for the Docker host
+                    docker.withServer("${env.DOCKER_HOST}") {
+                        // Build the Docker image
+                        docker.build("ds")
+                    }
+                }
+            }
+        }
 
         stage('SonarQube analysis') {
             steps {
                 script {
-                    withSonarQubeEnv('SonarQube Server') {
+                    // Run SonarQube analysis
+                    withSonarQubeEnv('My SonarQube Server') {
                         sh '''
                         /var/jenkins_home/tools/hudson.plugins.sonar.SonarRunnerInstallation/SonarqUIBE/bin/sonar-scanner \
                         -Dsonar.host.url=http://172.17.0.3:9000 \
