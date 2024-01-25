@@ -21,7 +21,8 @@ pipeline {
         stage('Docker Build') {
             steps {
                 script {
-                    docker.build("docker-compose.yaml")
+                    // Run docker-compose to build services
+                    sh 'docker-compose -f docker-compose.yaml build'
                 }
             }
         }
