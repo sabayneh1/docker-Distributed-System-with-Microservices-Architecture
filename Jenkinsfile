@@ -21,7 +21,7 @@ pipeline {
         stage('Docker Build') {
             steps {
                 script {
-                    docker.build("your-docker-compose-project")
+                    docker.build("docker-compose.yaml")
                 }
             }
         }
