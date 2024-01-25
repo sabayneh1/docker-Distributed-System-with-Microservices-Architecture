@@ -22,20 +22,22 @@ pipeline {
             steps {
                 script {
                     // Download and install Docker Compose
-                    powershell 'Invoke-WebRequest -Uri "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Windows-x86_64.exe" -OutFile "C:\\docker-compose.exe"'
-                    powershell 'setx PATH "$env:PATH;C:\\\"'
+                    powershell 'Invoke-WebRequest -Uri "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Windows-x86_64.exe" -OutFile "docker-compose.exe"'
+                    powershell 'Move-Item -Path "docker-compose.exe" -Destination "C:\\Windows\\System32\\docker-compose.exe"'
                 }
             }
         }
+
 
         stage('Docker Build') {
             steps {
                 script {
                     // Run docker-compose to build services
-                    sh 'docker-compose -f docker-compose.yaml build'
+                    bat 'docker-compose -f docker-compose.yaml build'
                 }
             }
         }
+
 
         stage('SonarQube analysis') {
             steps {
