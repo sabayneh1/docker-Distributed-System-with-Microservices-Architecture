@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        nodejs "node" // "node" is the name of the Node.js installation from Global Tool Configuration
+        nodejs "NodeJS-21.6.1" // "node" is the name of the Node.js installation from Global Tool Configuration
     }
 
     stages {
