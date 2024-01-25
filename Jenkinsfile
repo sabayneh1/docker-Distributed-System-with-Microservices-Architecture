@@ -18,26 +18,17 @@ pipeline {
             }
         }
 
-        stage('Install Docker Compose') {
-            steps {
-                script {
-                    // Download and install Docker Compose
-                    powershell 'Invoke-WebRequest -Uri "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Windows-x86_64.exe" -OutFile "docker-compose.exe"'
-                    powershell 'Move-Item -Path "docker-compose.exe" -Destination "C:\\Windows\\System32\\docker-compose.exe"'
-                }
-            }
-        }
-
-
         stage('Docker Build') {
             steps {
                 script {
                     // Run docker-compose to build services
-                    bat 'docker-compose -f docker-compose.yaml build'
+                    dir('path/to/your/docker-compose') {
+                        // Assume your docker-compose.yaml is in the same directory as your Jenkinsfile
+                        docker.build("DS")
+                    }
                 }
             }
         }
-
 
         stage('SonarQube analysis') {
             steps {
