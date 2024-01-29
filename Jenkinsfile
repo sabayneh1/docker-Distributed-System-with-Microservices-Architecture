@@ -1,13 +1,15 @@
 pipeline {
     agent any
-
+     environment {
+        GIT_CREDENTIAL_ID = 'GithubSecretText'
+     }
     tools {
         nodejs "NodeJS-21.6.1"
-        // Ensure Docker is correctly configured in Jenkins
+
     }
 
     environment {
-        // This might need to be updated depending on your Docker setup
+
         DOCKER_HOST = 'unix:///var/run/docker.sock'
     }
 
