@@ -1,16 +1,13 @@
 pipeline {
     agent any
-     environment {
-        GIT_CREDENTIAL_ID = 'GithubSecretText'
-     }
-    tools {
-        nodejs "NodeJS-21.6.1"
-
-    }
 
     environment {
-
+        GIT_CREDENTIAL_ID = 'GithubSecretText'
         DOCKER_HOST = 'unix:///var/run/docker.sock'
+    }
+
+    tools {
+        nodejs "NodeJS-21.6.1"
     }
 
     stages {
