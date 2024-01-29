@@ -12,4 +12,4 @@ services:
     build: ./product-service
     ports:
       - "3003:3003"
-  # Add more services as needed
+

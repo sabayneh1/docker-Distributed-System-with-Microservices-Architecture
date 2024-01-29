@@ -3,12 +3,12 @@ pipeline {
 
     tools {
         nodejs "NodeJS-21.6.1"
-        dockerTool 'docker-automatic'
+        // Ensure Docker is correctly configured in Jenkins
     }
 
     environment {
-        // Define the Docker host environment variable
-        DOCKER_HOST = 'tcp://host.docker.internal:2375'
+        // This might need to be updated depending on your Docker setup
+        DOCKER_HOST = 'unix:///var/run/docker.sock'
     }
 
     stages {
@@ -27,11 +27,7 @@ pipeline {
         stage('Docker Build') {
             steps {
                 script {
-                    // Use the environment variable for the Docker host
-                    docker.withServer("${env.DOCKER_HOST}") {
-                        // Build the Docker image
-                        docker.build("ds")
-                    }
+                    docker.build("distributed-system")
                 }
             }
         }
@@ -39,14 +35,14 @@ pipeline {
         stage('SonarQube analysis') {
             steps {
                 script {
-                    // Run SonarQube analysis
+                    // Ensure SonarQube details are correctly configured
                     withSonarQubeEnv('My SonarQube Server') {
                         sh '''
-                        /var/jenkins_home/tools/hudson.plugins.sonar.SonarRunnerInstallation/SonarqUIBE/bin/sonar-scanner \
-                        -Dsonar.host.url=http://172.17.0.3:9000 \
-                        -Dsonar.login=squ_739cc1a8575faf7cbdef7d986da7e7deb4398824 \
-                        -Dsonar.projectKey=my_project_key \
-                        -Dsonar.projectBaseDir=/var/jenkins_home/workspace/MyProject
+                        sonar-scanner \
+                        -Dsonar.projectKey=DistributedMicroservices-jenkins \
+                        -Dsonar.sources=. \
+                        -Dsonar.host.url=http://35.182.71.62:9000 \
+                        -Dsonar.token=sqp_6dae89f64f00623799d78397706f7d87c6791b5c
                         '''
                     }
                 }
