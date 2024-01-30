@@ -41,8 +41,12 @@ pipeline {
                 script {
                     withSonarQubeEnv('SonaraQube') {
                         withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
+                            // Ensure sonar-scanner is in the PATH
+                            def sonarQubeScannerHome = tool 'SonarQube_5.0.1.3006'
+                            env.PATH = "${sonarQubeScannerHome}/bin:${env.PATH}"
+
                             sh '''
-                            ${tool 'SonarQube_5.0.1.3006'} \
+                            sonar-scanner \
                             -Dsonar.projectKey=DistributedMicroservices-jenkins \
                             -Dsonar.sources=. \
                             -Dsonar.host.url=http://35.182.71.62:9000 \
@@ -53,6 +57,7 @@ pipeline {
                 }
             }
         }
+
     }
 
     post {
