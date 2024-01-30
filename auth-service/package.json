@@ -1,0 +1,18 @@
+{
+  "name": "distributed-microservice",
+  "version": "1.0.0",
+  "description": "Distributed microservice using docker test with SonarQube",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "mocha",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "mocha": "^9.1.3"
+  }
+}
