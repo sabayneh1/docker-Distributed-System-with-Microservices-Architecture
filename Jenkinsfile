@@ -4,6 +4,7 @@ pipeline {
     environment {
         GIT_CREDENTIAL_ID = 'GithubSecretText'
         DOCKER_HOST = 'unix:///var/run/docker.sock'
+        JAVA_HOME = '/usr/lib/jvm/java-17-openjdk-amd64' // Set JAVA_HOME to Java 17
     }
 
     tools {
@@ -57,7 +58,6 @@ pipeline {
                 }
             }
         }
-
     }
 
     post {
