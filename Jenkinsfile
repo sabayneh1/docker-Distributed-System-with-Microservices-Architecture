@@ -42,7 +42,7 @@ pipeline {
                     withSonarQubeEnv('SonaraQube') {
                         withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
                             sh '''
-                            sonar-scanner \
+                            ${tool 'SonarQube_5.0.1.3006'} \
                             -Dsonar.projectKey=DistributedMicroservices-jenkins \
                             -Dsonar.sources=. \
                             -Dsonar.host.url=http://35.182.71.62:9000 \
