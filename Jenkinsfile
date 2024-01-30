@@ -40,7 +40,7 @@ pipeline {
             steps {
                 script {
                     withSonarQubeEnv('SonaraQube') {
-                        withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
+                        withCredentials([string(credentialsId: 'Secret text', variable: 'SONAR_TOKEN')]) {
                             sh '''
                             sonar-scanner \
                             -Dsonar.projectKey=DistributedMicroservices-jenkins \
