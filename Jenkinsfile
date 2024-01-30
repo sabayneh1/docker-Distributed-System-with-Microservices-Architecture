@@ -35,7 +35,7 @@ pipeline {
             steps {
                 script {
                     // Ensure SonarQube details are correctly configured
-                    withSonarQubeEnv('My SonarQube Server') {
+                    withSonarQubeEnv('SonaraQube') {
                         sh '''
                         sonar-scanner \
                         -Dsonar.projectKey=DistributedMicroservices-jenkins \
