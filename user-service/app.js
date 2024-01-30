@@ -1,11 +1,9 @@
-// app.js (Sample code for a microservice)
-
 const express = require('express');
 const app = express();
-const port = 3000;
+const port = 3002;
 
 app.get('/', (req, res) => {
-  res.send('Hello, this is the product service!');
+  res.send('User Service: User management and profiles.');
 });
 
 app.listen(port, '0.0.0.0', () => {
