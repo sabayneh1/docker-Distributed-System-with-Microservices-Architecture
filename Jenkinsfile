@@ -45,13 +45,21 @@ pipeline {
         stage('Deploy to EC2') {
             steps {
                 script {
-                    // Deploy using Docker Compose
-                    sh """
+                    sh '''
+                        echo "Current working directory:"
+                        pwd
+                        echo "Listing files in current directory:"
+                        ls -lah
+                        echo "Changing directory to project..."
                         cd /home/ubuntu/project/DSM/docker-Distributed-System-with-Microservices-Architecture
+                        echo "Current working directory after change:"
+                        pwd
+                        echo "Listing files in current directory:"
+                        ls -lah
                         git pull
                         docker-compose down
                         docker-compose up -d --build
-                    """
+                    '''
                 }
             }
         }
@@ -61,7 +69,6 @@ pipeline {
                 script {
                     withSonarQubeEnv('SonaraQube') {
                         withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
-                            // Ensure sonar-scanner is in the PATH
                             def sonarQubeScannerHome = tool 'SonarQube_5.0.1.3006'
                             env.PATH = "${sonarQubeScannerHome}/bin:${env.PATH}"
 
