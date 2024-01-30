@@ -13,7 +13,12 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']],
+                    userRemoteConfigs: [[
+                        url: 'https://github.com/sabayneh1/docker-Distributed-System-with-Microservices-Architecture.git',
+                        credentialsId: "${env.GIT_CREDENTIAL_ID}"
+                    ]]
+                ])
             }
         }
 
@@ -34,15 +39,16 @@ pipeline {
         stage('SonarQube analysis') {
             steps {
                 script {
-                    // Ensure SonarQube details are correctly configured
                     withSonarQubeEnv('SonaraQube') {
-                        sh '''
-                        sonar-scanner \
-                        -Dsonar.projectKey=DistributedMicroservices-jenkins \
-                        -Dsonar.sources=. \
-                        -Dsonar.host.url=http://35.182.71.62:9000 \
-                        -Dsonar.token=sqp_6dae89f64f00623799d78397706f7d87c6791b5c
-                        '''
+                        withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
+                            sh '''
+                            sonar-scanner \
+                            -Dsonar.projectKey=DistributedMicroservices-jenkins \
+                            -Dsonar.sources=. \
+                            -Dsonar.host.url=http://35.182.71.62:9000 \
+                            -Dsonar.login=${SONAR_TOKEN}
+                            '''
+                        }
                     }
                 }
             }
