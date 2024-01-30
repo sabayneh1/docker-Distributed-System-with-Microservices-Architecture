@@ -5,6 +5,8 @@ pipeline {
         GIT_CREDENTIAL_ID = 'GithubSecretText'
         DOCKER_HOST = 'unix:///var/run/docker.sock'
         JAVA_HOME = '/usr/lib/jvm/java-17-openjdk-amd64' // Set JAVA_HOME to Java 17
+        DOCKERHUB_CREDENTIAL_ID = 'DockerHubCredentials' // Add your Docker Hub credentials ID
+        IMAGE_TAG = 'sabayneh/distributed-system' // Replace with your Docker Hub username and desired image tag
     }
 
     tools {
@@ -29,10 +31,27 @@ pipeline {
             }
         }
 
-        stage('Docker Build') {
+        stage('Docker Build and Push') {
             steps {
                 script {
-                    docker.build("distributed-system")
+                    docker.withRegistry('https://registry.hub.docker.com', "${env.DOCKERHUB_CREDENTIAL_ID}") {
+                        def customImage = docker.build("${env.IMAGE_TAG}")
+                        customImage.push()
+                    }
+                }
+            }
+        }
+
+        stage('Deploy to EC2') {
+            steps {
+                script {
+                    // Deploy using Docker Compose
+                    sh """
+                        cd /home/ubuntu/project/DSM/docker-Distributed-System-with-Microservices-Architecture
+                        git pull
+                        docker-compose down
+                        docker-compose up -d --build
+                    """
                 }
             }
         }
