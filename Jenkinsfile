@@ -6,7 +6,7 @@ pipeline {
         DOCKER_HOST = 'unix:///var/run/docker.sock'
         JAVA_HOME = '/usr/lib/jvm/java-17-openjdk-amd64' // Set JAVA_HOME to Java 17
         DOCKERHUB_CREDENTIAL_ID = 'DockerHubCredentials' // Add your Docker Hub credentials ID
-        IMAGE_TAG = 'sabayneh/distributed-system' // Replace with your Docker Hub username and desired image tag
+        IMAGE_TAG = 'sabayneh/distributed-system' // Replace with your Docker Hub username and desired image tags
     }
 
     tools {
