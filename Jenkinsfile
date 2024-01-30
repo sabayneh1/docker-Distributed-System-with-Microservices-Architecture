@@ -47,7 +47,7 @@ pipeline {
                 script {
                     sh '''
                         echo "Copying project files to workspace..."
-                        rm -rf * // Clear the current workspace
+                        rm -rf *  // Clear the current workspace
                         cp -R /home/ubuntu/project/DSM/docker-Distributed-System-with-Microservices-Architecture/* .
                         echo "Listing files in workspace after copy:"
                         ls -lah
