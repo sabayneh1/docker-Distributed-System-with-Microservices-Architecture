@@ -42,21 +42,25 @@ pipeline {
             }
         }
 
+        stage('Prepare Deployment') {
+            steps {
+                script {
+                    sh '''
+                        echo "Copying project files to workspace..."
+                        rm -rf * // Clear the current workspace
+                        cp -R /home/ubuntu/project/DSM/docker-Distributed-System-with-Microservices-Architecture/* .
+                        echo "Listing files in workspace after copy:"
+                        ls -lah
+                    '''
+                }
+            }
+        }
+
         stage('Deploy to EC2') {
             steps {
                 script {
                     sh '''
-                        echo "Current working directory:"
-                        pwd
-                        echo "Listing files in current directory:"
-                        ls -lah
-                        echo "Changing directory to project..."
-                        cd /home/ubuntu/project/DSM/docker-Distributed-System-with-Microservices-Architecture
-                        echo "Current working directory after change:"
-                        pwd
-                        echo "Listing files in current directory:"
-                        ls -lah
-                        git pull
+                        echo "Deploying using Docker Compose..."
                         docker-compose down
                         docker-compose up -d --build
                     '''
