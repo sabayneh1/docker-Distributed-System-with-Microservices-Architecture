@@ -20,10 +20,13 @@ pipeline {
                     userRemoteConfigs: [[
                         url: 'https://github.com/sabayneh1/docker-Distributed-System-with-Microservices-Architecture.git',
                         credentialsId: "${env.GIT_CREDENTIAL_ID}"
-                    ]]
+                    ]],
+                    lightweight: true // Enable lightweight checkout
                 ])
             }
         }
+    }
+
 
         stage('Install dependencies') {
             steps {
@@ -67,16 +70,22 @@ pipeline {
 
         stage('SonarQube analysis') {
             steps {
-                withSonarQubeEnv('SonaraQube') {
+                withSonarQubeEnv('SonarQube') {
                     withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
                         def sonarQubeScannerHome = tool 'SonarQube_5.0.1.3006'
                         env.PATH = "${sonarQubeScannerHome}/bin:${env.PATH}"
-                        sh 'sonar-scanner -Dsonar.projectKey=DistributedMicroservices-jenkins -Dsonar.sources=. -Dsonar.host.url=http://3.96.66.45:9000 -Dsonar.login=$SONAR_TOKEN'
+                        sh '''
+                            sonar-scanner \
+                            -Dsonar.projectKey=DistributedMicroservices-jenkins \
+                            -Dsonar.sources=. \
+                            -Dsonar.host.url=http://3.96.66.45:9000 \
+                            -Dsonar.login=$SONAR_TOKEN
+                        '''
                     }
                 }
             }
         }
-    }
+
 
     post {
         always {
