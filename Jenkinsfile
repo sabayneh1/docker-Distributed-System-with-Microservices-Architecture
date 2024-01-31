@@ -49,15 +49,20 @@ pipeline {
 
         stage('SonarQube analysis') {
             steps {
-                withSonarQubeEnv('SonarQube') {
-                    withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
-                        sh '''
+                script {
+                    withSonarQubeEnv('SonarQube') {
+                        withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
+                            // Ensure sonar-scanner is in the PATH
+                            def sonarQubeScannerHome = tool 'SonarQube_5.0.1.3006'
+                            env.PATH = "${sonarQubeScannerHome}/bin:${env.PATH}"
+
+                            sh '''
                             sonar-scanner \
                             -Dsonar.projectKey=DistributedMicroservices-jenkins \
                             -Dsonar.sources=. \
-                            -Dsonar.host.url=http://3.96.66.45:9000 \
+                            -Dsonar.host.url=http://35.183.41.85:9000 \
                             -Dsonar.login=$SONAR_TOKEN
-                        '''
+                            '''
                     }
                 }
             }
