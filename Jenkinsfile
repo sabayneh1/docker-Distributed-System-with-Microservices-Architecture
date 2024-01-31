@@ -25,8 +25,6 @@ pipeline {
                 ])
             }
         }
-    }
-
 
         stage('Install dependencies') {
             steps {
@@ -85,7 +83,7 @@ pipeline {
                 }
             }
         }
-
+    }
 
     post {
         always {
