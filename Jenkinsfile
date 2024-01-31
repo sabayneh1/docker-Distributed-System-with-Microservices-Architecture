@@ -81,14 +81,18 @@ pipeline {
             cleanWs()
         }
         failure {
-            emailext(
-                subject: "BUILD FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-                body: """<p>The Jenkins job <strong>${env.JOB_NAME} [${env.BUILD_NUMBER}]</strong> has failed.</p>
-                        <p>Check the build logs for details: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>""",
-                to: 'samgtest0429@gmail.com', // email address
-                mimeType: 'text/html' // Sending the email as HTML for better formatting
-            )
+            try {
+                emailext(
+                    subject: "BUILD FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+                    body: "The Jenkins job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' has failed. Check the build logs for details.",
+                    to: 'samgtest0429@gmail.com' // specify the recipient's email here
+                )
+                echo "Email sent successfully."
+            } catch (Exception e) {
+                echo "Failed to send email. Error: ${e.message}"
+            }
         }
     }
+
 
 }
