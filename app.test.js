@@ -1,9 +1,20 @@
 const request = require('supertest');
-const app = require('./app'); // Import your Express app
+const express = require('express');
+const app = require('./app'); // Adjust the path as necessary
+
+let server;
+
+beforeAll(() => {
+  server = app.listen(3000); // Start your server
+});
+
+afterAll((done) => {
+  server.close(done); // Close the server after tests
+});
 
 describe('GET /', () => {
-  it('responds with a greeting', async () => {
-    const response = await request(app).get('/');
+  test('responds with a greeting', async () => {
+    const response = await request(server).get('/');
     expect(response.statusCode).toBe(200);
     expect(response.text).toBe('Hello, this is the product service!');
   });
