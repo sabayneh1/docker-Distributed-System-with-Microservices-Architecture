@@ -52,7 +52,7 @@ pipeline {
     post {
         always {
             echo "Custom workspace cleanup"
-            sh 'find . -not -name "node_modules" -not -name "." -not -name ".." -exec rm -rf {} +'
+            sh 'find . -path ./node_modules -prune -o -type f -exec rm -f {} +'
         }
         success {
             emailext(
