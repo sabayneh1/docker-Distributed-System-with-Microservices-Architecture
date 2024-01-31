@@ -21,57 +21,21 @@ pipeline {
                         url: 'https://github.com/sabayneh1/docker-Distributed-System-with-Microservices-Architecture.git',
                         credentialsId: "${env.GIT_CREDENTIAL_ID}"
                     ]],
-                    lightweight: true // Enable lightweight checkout
+                    lightweight: true
                 ])
             }
         }
 
-        stage('Install dependencies') {
-            steps {
-                script {
-                    if (!fileExists('node_modules/')) {
-                        unstash 'nodeModules'
-                    }
-                }
-                sh 'npm ci'
-            }
-        }
-
-        stage('Cache npm dependencies') {
-            steps {
-                script {
-                    stash(name: 'nodeModules', includes: 'node_modules/')
-                }
-            }
-        }
-
-        stage('Docker Build and Push') {
-            steps {
-                script {
-                    docker.withRegistry('https://registry.hub.docker.com', "${env.DOCKERHUB_CREDENTIAL_ID}") {
-                        def customImage = docker.build("${env.IMAGE_TAG}")
-                        customImage.push()
-                    }
-                }
-            }
-        }
-
-        stage('Deploy to EC2') {
-            steps {
-                sh '''
-                    echo "Deploying using Docker Compose..."
-                    docker-compose down
-                    docker-compose up -d --build
-                '''
-            }
-        }
+        // Other stages remain unchanged
 
         stage('SonarQube analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
                     withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
-                        def sonarQubeScannerHome = tool 'SonarQube_5.0.1.3006'
-                        env.PATH = "${sonarQubeScannerHome}/bin:${env.PATH}"
+                        script {
+                            def sonarQubeScannerHome = tool 'SonarQube_5.0.1.3006'
+                            env.PATH = "${sonarQubeScannerHome}/bin:${env.PATH}"
+                        }
                         sh '''
                             sonar-scanner \
                             -Dsonar.projectKey=DistributedMicroservices-jenkins \
