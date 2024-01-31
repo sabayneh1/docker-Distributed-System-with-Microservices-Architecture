@@ -84,14 +84,14 @@ pipeline {
             emailext(
                 subject: "BUILD SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                 body: "The Jenkins job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' was successful.",
-                to: 'samgtest0429@gmail.com'
+                to: '533a2228-3250-4446-b5e5-925e6023c6b1@mailslurp.com'
             )
         }
         failure {
             emailext(
                 subject: "BUILD FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                 body: "The Jenkins job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' has failed. Check the build logs for details.",
-                to: 'samgtest0429@gmail.com'
+                to: '533a2228-3250-4446-b5e5-925e6023c6b1@mailslurp.com'
             )
         }
     }
