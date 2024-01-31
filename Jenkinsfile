@@ -85,7 +85,7 @@ pipeline {
                 subject: "BUILD FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                 body: """<p>The Jenkins job <strong>${env.JOB_NAME} [${env.BUILD_NUMBER}]</strong> has failed.</p>
                         <p>Check the build logs for details: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>""",
-                to: 'samgtest0429@gmail.com', 
+                to: 'samgtest0429@gmail.com', // email
                 mimeType: 'text/html' // Sending the email as HTML for better formatting
             )
         }
