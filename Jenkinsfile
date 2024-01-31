@@ -25,8 +25,27 @@ pipeline {
                 ])
             }
         }
+        stage('Docker Build and Push') {
+            steps {
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', "${env.DOCKERHUB_CREDENTIAL_ID}") {
+                        def customImage = docker.build("${env.IMAGE_TAG}")
+                        customImage.push()
+                    }
+                }
+            }
+        }
 
-       
+        stage('Deploy to EC2') {
+            steps {
+                sh '''
+                    echo "Deploying using Docker Compose..."
+                    docker-compose down
+                    docker-compose up -d --build
+                '''
+            }
+        }
+
 
         stage('SonarQube analysis') {
             steps {
