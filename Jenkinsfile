@@ -26,7 +26,7 @@ pipeline {
             }
         }
 
-        // Other stages remain unchanged
+       
 
         stage('SonarQube analysis') {
             steps {
