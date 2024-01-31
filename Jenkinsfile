@@ -1,5 +1,6 @@
 pipeline {
     agent any
+
     environment {
         GIT_CREDENTIAL_ID = 'NewGithubSecretText'
         DOCKER_HOST = 'unix:///var/run/docker.sock'
@@ -7,9 +8,11 @@ pipeline {
         DOCKERHUB_CREDENTIAL_ID = 'NewDockerHubCredentials'
         IMAGE_TAG = 'sabayneh/distributed-system'
     }
+
     tools {
         nodejs "NodeJS-21.6.1"
     }
+
     stages {
         stage('Checkout') {
             steps {
@@ -22,14 +25,18 @@ pipeline {
                 ])
             }
         }
+
         stage('Docker Build and Push') {
             steps {
-                docker.withRegistry('https://registry.hub.docker.com', "${env.DOCKERHUB_CREDENTIAL_ID}") {
-                    def customImage = docker.build("${env.IMAGE_TAG}")
-                    customImage.push()
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', "${env.DOCKERHUB_CREDENTIAL_ID}") {
+                        def customImage = docker.build("${env.IMAGE_TAG}")
+                        customImage.push()
+                    }
                 }
             }
         }
+
         stage('Deploy to EC2') {
             steps {
                 sh '''
@@ -39,14 +46,11 @@ pipeline {
                 '''
             }
         }
+
         stage('SonarQube analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
                     withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
-                        script {
-                            def sonarQubeScannerHome = tool 'SonarQube_5.0.1.3006'
-                            env.PATH = "${sonarQubeScannerHome}/bin:${env.PATH}"
-                        }
                         sh '''
                             sonar-scanner \
                             -Dsonar.projectKey=DistributedMicroservices-jenkins \
@@ -59,6 +63,7 @@ pipeline {
             }
         }
     }
+
     post {
         always {
             echo "Custom workspace cleanup"
