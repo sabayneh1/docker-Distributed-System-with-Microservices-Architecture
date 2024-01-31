@@ -66,7 +66,7 @@ pipeline {
                             sonar-scanner \
                             -Dsonar.projectKey=DistributedMicroservices-jenkins \
                             -Dsonar.sources=. \
-                            -Dsonar.host.url=http://3.96.66.4:9000 \
+                            -Dsonar.host.url=http://3.96.66.45:9000 \
                             -Dsonar.login=$SONAR_TOKEN
                             '''
                         }
@@ -80,18 +80,20 @@ pipeline {
         always {
             cleanWs()
         }
-        failure {
-            script {
-                try {
-                    emailext(
-                        subject: "BUILD FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-                        body: "The Jenkins job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' has failed. Check the build logs for details.",
-                        to: 'samgtest0429@gmail.com' // specify the recipient's email here
-                    )
-                    echo "Email sent successfully."
-                } catch (Exception e) {
-                    echo "Failed to send email. Error: ${e.message}"
-                }
-            }
+        success {
+            emailext(
+                subject: "BUILD SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+                body: "The Jenkins job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' was successful.",
+                to: 'samgtest0429@gmail.com'
+            )
         }
+        failure {
+            emailext(
+                subject: "BUILD FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+                body: "The Jenkins job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' has failed. Check the build logs for details.",
+                to: 'samgtest0429@gmail.com'
+            )
+        }
+    }
+
 }
