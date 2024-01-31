@@ -49,20 +49,15 @@ pipeline {
 
         stage('SonarQube analysis') {
             steps {
-                script {
-                    withSonarQubeEnv('SonarQube') {
-                        withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
-                            // Ensure sonar-scanner is in the PATH
-                            def sonarQubeScannerHome = tool 'SonarQube_5.0.1.3006'
-                            env.PATH = "${sonarQubeScannerHome}/bin:${env.PATH}"
-
-                            sh '''
+                withSonarQubeEnv('SonarQube') {
+                    withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
+                        sh '''
                             sonar-scanner \
                             -Dsonar.projectKey=DistributedMicroservices-jenkins \
                             -Dsonar.sources=. \
                             -Dsonar.host.url=http://35.183.41.85:9000 \
                             -Dsonar.login=$SONAR_TOKEN
-                            '''
+                        '''
                     }
                 }
             }
@@ -85,8 +80,4 @@ pipeline {
             emailext(
                 subject: "BUILD FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                 body: "The Jenkins job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' has failed. Check the build logs for details.",
-                to: '533a2228-3250-4446-b5e5-925e6023c6b1@mailslurp.com'
-            )
-        }
-    }
-}
+                to: '533a2228-3250-4446-b5e5-
