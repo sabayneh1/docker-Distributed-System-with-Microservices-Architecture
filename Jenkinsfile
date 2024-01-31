@@ -4,9 +4,9 @@ pipeline {
     environment {
         GIT_CREDENTIAL_ID = 'NewGithubSecretText'
         DOCKER_HOST = 'unix:///var/run/docker.sock'
-        JAVA_HOME = '/usr/lib/jvm/java-17-openjdk-amd64' // Set JAVA_HOME to Java 17
-        DOCKERHUB_CREDENTIAL_ID = 'NewDockerHubCredentials' // Add your Docker Hub credentials ID
-        IMAGE_TAG = 'sabayneh/distributed-system' // Replace with your Docker Hub username and desired image tag
+        JAVA_HOME = '/usr/lib/jvm/java-17-openjdk-amd64'
+        DOCKERHUB_CREDENTIAL_ID = 'NewDockerHubCredentials'
+        IMAGE_TAG = 'sabayneh/distributed-system'
     }
 
     tools {
@@ -27,7 +27,20 @@ pipeline {
 
         stage('Install dependencies') {
             steps {
-                sh 'npm install'
+                script {
+                    if (!fileExists('node_modules/')) {
+                        unstash 'nodeModules'
+                    }
+                }
+                sh 'npm ci'
+            }
+        }
+
+        stage('Cache npm dependencies') {
+            steps {
+                script {
+                    stash(name: 'nodeModules', includes: 'node_modules/')
+                }
             }
         }
 
@@ -44,32 +57,21 @@ pipeline {
 
         stage('Deploy to EC2') {
             steps {
-                script {
-                    sh '''
-                        echo "Deploying using Docker Compose..."
-                        docker-compose down
-                        docker-compose up -d --build
-                    '''
-                }
+                sh '''
+                    echo "Deploying using Docker Compose..."
+                    docker-compose down
+                    docker-compose up -d --build
+                '''
             }
         }
 
         stage('SonarQube analysis') {
             steps {
-                script {
-                    withSonarQubeEnv('SonaraQube') {
-                        withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
-                            def sonarQubeScannerHome = tool 'SonarQube_5.0.1.3006'
-                            env.PATH = "${sonarQubeScannerHome}/bin:${env.PATH}"
-
-                            sh '''
-                            sonar-scanner \
-                            -Dsonar.projectKey=DistributedMicroservices-jenkins \
-                            -Dsonar.sources=. \
-                            -Dsonar.host.url=http://3.96.66.45:9000 \
-                            -Dsonar.login=$SONAR_TOKEN
-                            '''
-                        }
+                withSonarQubeEnv('SonaraQube') {
+                    withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
+                        def sonarQubeScannerHome = tool 'SonarQube_5.0.1.3006'
+                        env.PATH = "${sonarQubeScannerHome}/bin:${env.PATH}"
+                        sh 'sonar-scanner -Dsonar.projectKey=DistributedMicroservices-jenkins -Dsonar.sources=. -Dsonar.host.url=http://3.96.66.45:9000 -Dsonar.login=$SONAR_TOKEN'
                     }
                 }
             }
@@ -78,7 +80,8 @@ pipeline {
 
     post {
         always {
-            cleanWs()
+            echo "Custom workspace cleanup"
+            sh 'find . -not -name "node_modules" -not -name "." -not -name ".." -exec rm -rf {} +'
         }
         success {
             emailext(
@@ -95,5 +98,4 @@ pipeline {
             )
         }
     }
-
 }
