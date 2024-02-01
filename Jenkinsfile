@@ -31,10 +31,16 @@ pipeline {
         stage('Install dependencies') {
             steps {
                 script {
+                    // Check if the 'node_modules' directory exists in the workspace
                     if (!fileExists('node_modules/')) {
+                        // If 'node_modules' directory does not exist, retrieve it from the stash
+                        // This is useful for reusing 'node_modules' across pipeline runs to save time
                         unstash 'nodeModules'
                     }
                 }
+                // Run 'npm ci' to install dependencies based on the 'package-lock.json' file
+                // This command is preferred in continuous integration setups as it is faster
+                // and ensures consistent installations across environments
                 sh 'npm ci'
             }
         }
@@ -42,10 +48,14 @@ pipeline {
         stage('Cache npm dependencies') {
             steps {
                 script {
+                    // Stash the 'node_modules' directory for later use in the pipeline or future runs
+                    // This is useful for caching dependencies so they don't need to be reinstalled
+                    // every time, speeding up the build process
                     stash(name: 'nodeModules', includes: 'node_modules/')
                 }
             }
         }
+
 
         // Docker build and push stage: Build a Docker image and push it to Docker Hub
         stage('Docker Build and Push') {
