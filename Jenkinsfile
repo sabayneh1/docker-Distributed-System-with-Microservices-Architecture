@@ -65,8 +65,10 @@ pipeline {
             steps {
                 sh '''
                     echo "Deploying using Docker Compose..."
-                    docker-compose down  // Stop and remove current containers
-                    docker-compose up -d --build  // Build and start new containers
+                    # Stop and remove current containers
+                    docker-compose down
+                    # Build and start new containers
+                    docker-compose up -d --build
                 '''
             }
         }
