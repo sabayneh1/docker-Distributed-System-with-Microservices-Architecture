@@ -1,7 +1,8 @@
 pipeline {
-    agent any
+    agent any  // Indicates that this pipeline can run on any available agent
 
     environment {
+        // Define environment variables
         GIT_CREDENTIAL_ID = 'NewGithubSecretText'
         DOCKER_HOST = 'unix:///var/run/docker.sock'
         JAVA_HOME = '/usr/lib/jvm/java-17-openjdk-amd64'
@@ -10,10 +11,12 @@ pipeline {
     }
 
     tools {
+        // Specify the version of Node.js to use
         nodejs "NodeJS-21.6.1"
     }
 
     stages {
+        // Checkout stage: Retrieve code from a Git repository
         stage('Checkout') {
             steps {
                 checkout([$class: 'GitSCM', branches: [[name: '*/main']],
@@ -21,14 +24,34 @@ pipeline {
                         url: 'https://github.com/sabayneh1/docker-Distributed-System-with-Microservices-Architecture.git',
                         credentialsId: "${env.GIT_CREDENTIAL_ID}"
                     ]],
-                    lightweight: true
+                    lightweight: true  // Use lightweight checkout for faster execution
                 ])
             }
         }
+        stage('Install dependencies') {
+            steps {
+                script {
+                    if (!fileExists('node_modules/')) {
+                        unstash 'nodeModules'
+                    }
+                }
+                sh 'npm ci'
+            }
+        }
 
+        stage('Cache npm dependencies') {
+            steps {
+                script {
+                    stash(name: 'nodeModules', includes: 'node_modules/')
+                }
+            }
+        }
+
+        // Docker build and push stage: Build a Docker image and push it to Docker Hub
         stage('Docker Build and Push') {
             steps {
                 script {
+                    // Login to Docker registry and push the image
                     docker.withRegistry('https://registry.hub.docker.com', "${env.DOCKERHUB_CREDENTIAL_ID}") {
                         def customImage = docker.build("${env.IMAGE_TAG}")
                         customImage.push()
@@ -37,22 +60,26 @@ pipeline {
             }
         }
 
+        // Deployment stage: Deploy the application to an EC2 instance using Docker Compose
         stage('Deploy to EC2') {
             steps {
                 sh '''
                     echo "Deploying using Docker Compose..."
-                    docker-compose down
-                    docker-compose up -d --build
+                    docker-compose down  // Stop and remove current containers
+                    docker-compose up -d --build  // Build and start new containers
                 '''
             }
         }
 
+        // SonarQube analysis stage: Perform code quality analysis using SonarQube
         stage('SonarQube analysis') {
             steps {
                 script {
                     withSonarQubeEnv('SonarQube') {
+                        // Use SonarQube token for authentication
                         withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
-                            // Ensure sonar-scanner is in the PATH
+
+                            // Define the SonarQube scanner and execute the analysis
                             def sonarQubeScannerHome = tool 'SonarQube_5.0.1.3006'
                             env.PATH = "${sonarQubeScannerHome}/bin:${env.PATH}"
 
@@ -71,11 +98,14 @@ pipeline {
     }
 
     post {
+        // Post-build actions
         always {
+            // Custom command to clean up the workspace while preserving node_modules
             echo "Custom workspace cleanup"
             sh 'find . -path ./node_modules -prune -o -type f -exec rm -f {} +'
         }
         success {
+            // Send email notification on successful build
             emailext(
                 subject: "BUILD SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                 body: "The Jenkins job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' was successful.",
@@ -83,11 +113,11 @@ pipeline {
             )
         }
         failure {
+            // Send email notification on build failure
             emailext(
                 subject: "BUILD FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                 body: "The Jenkins job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' has failed. Check the build logs for details.",
                 to: '533a2228-3250-4446-b5e5-925e6023c6b1@mailslurp.com'
-
             )
         }
     }
