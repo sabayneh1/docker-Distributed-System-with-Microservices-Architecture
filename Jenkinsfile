@@ -103,21 +103,19 @@ pipeline {
 
         stage('Deploy to Development') {
             when {
-                branch 'develop'
+                // Temporarily comment out for debugging
+                // branch 'develop'
+                expression { true } // This allows the stage to run for any branch
             }
             steps {
-                // Only proceed if this is the development branch
                 script {
-                    // Deploy using Docker Compose for development
-                    // Assumes docker-compose.override.yml is set up for development
-                     echo "Deploying using Docker Compose in development stage..."
-                    //# Stop and remove current containers
+                    echo "Deploying using Docker Compose in development stage..."
                     sh 'docker-compose down'
-                    //# Build and start new containers
                     sh 'docker-compose up -d'
                 }
             }
         }
+
 
         // This part was moved out from an incorrect nested `stages` block
         stage('Deploy to Production') {
