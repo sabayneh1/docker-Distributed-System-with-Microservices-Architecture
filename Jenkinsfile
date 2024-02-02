@@ -73,43 +73,58 @@ pipeline {
             }
         }
 
-        // Add this stage for running Jest tests
+        stages {
+        // Run Jest tests and set TEST_SUCCESS on success
         stage('Run Jest Tests') {
             steps {
-                sh 'npm run test -- --detectOpenHandles || true'
-            }
-        }
-
-
-        stage('Deploy to Development') {
-            when {
-                // Temporarily comment out for debugging
-                // branch 'develop'
-                expression { true } // This allows the stage to run for any branch
-            }
-            steps {
                 script {
-                    echo "Deploying using Docker Compose in development stage..."
-                    sh 'docker-compose down'
-                    sh 'docker-compose up -d'
+                    try {
+                        sh 'npm run test -- --detectOpenHandles'
+                        env.TEST_SUCCESS = 'true'
+                    } catch (Exception e) {
+                        env.TEST_SUCCESS = 'false'
+                        error("Tests failed")
+                    }
                 }
             }
         }
 
+        // Deploy to Development only if tests pass
+        stage('Deploy to Development') {
+            when {
+                expression { env.TEST_SUCCESS == 'true' }
+            }
+            steps {
+                script {
+                    try {
+                        echo "Deploying using Docker Compose in development stage..."
+                        sh 'docker-compose down'
+                        sh 'docker-compose up -d'
+                        env.DEPLOY_DEV_SUCCESS = 'true'
+                    } catch (Exception e) {
+                        env.DEPLOY_DEV_SUCCESS = 'false'
+                        error("Development deployment failed")
+                    }
+                }
+            }
+        }
 
-        // This part was moved out from an incorrect nested `stages` block
+        // Deploy to Production only if development deployment is successful
         stage('Deploy to Production') {
             when {
-                branch 'main'
+                allOf {
+                    branch 'main'
+                    expression { env.DEPLOY_DEV_SUCCESS == 'true' }
+                }
             }
             steps {
                 script {
                     echo "Deploying using Docker Compose for production..."
-                    // Perform a rolling update without downtime
-                    sh 'docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d --no-deps --build --force-recreate'
+                    sh 'docker-compose -f docker-compose.yaml -f docker-compose.prod.yml up -d --no-deps --build --force-recreate'
                 }
             }
         }
+    }
 
         // SonarQube analysis stage: Perform code quality analysis using SonarQube
         stage('SonarQube analysis') {
