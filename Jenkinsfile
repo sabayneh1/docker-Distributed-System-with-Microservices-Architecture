@@ -81,19 +81,6 @@ pipeline {
         }
 
 
-        // // Deployment stage: Deploy the application to an EC2 instance using Docker Compose
-        // stage('Deploy to EC2') {
-        //     steps {
-        //         sh '''
-        //             echo "Deploying using Docker Compose..."
-        //             # Stop and remove current containers
-        //             docker-compose down
-        //             # Build and start new containers
-        //             docker-compose up -d --build
-        //         '''
-        //     }
-        // }
-
         stage('Deploy to Development') {
             when {
                 // Temporarily comment out for debugging
@@ -119,7 +106,7 @@ pipeline {
                 script {
                     echo "Deploying using Docker Compose for production..."
                     // Perform a rolling update without downtime
-                    sh 'docker-compose -f docker-compose.yaml -f docker-compose.prod.yml up -d --no-deps --build --force-recreate'
+                    sh 'docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d --no-deps --build --force-recreate'
                 }
             }
         }
