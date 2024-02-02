@@ -4,10 +4,14 @@ services:
     build: ./auth-service
     ports:
       - "3001:3001"
+    networks:
+      - backend
   user-service:
     build: ./user-service
     ports:
       - "3002:3002"
+    networks:
+      - backend
   product-service:
     build: ./product-service
     healthcheck:
@@ -17,3 +21,9 @@ services:
       retries: 5
     ports:
       - "3003:3003"
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
