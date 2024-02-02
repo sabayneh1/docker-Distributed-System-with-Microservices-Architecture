@@ -58,19 +58,24 @@ pipeline {
         stage('Run Jest Tests') {
             steps {
                 script {
+                    // Attempt to run the tests.
+                    // If successful, set TEST_SUCCESS to 'true'.
+                    // The try-catch block is used to handle any potential test failures.
                     try {
                         sh 'npm run test -- --detectOpenHandles'
                         env.TEST_SUCCESS = 'true'
                         echo "TEST_SUCCESS set to ${env.TEST_SUCCESS}"
                     } catch (Exception e) {
+                        // If an error occurs during the test execution, set TEST_SUCCESS to 'false'.
                         env.TEST_SUCCESS = 'false'
                         echo "TEST_SUCCESS set to ${env.TEST_SUCCESS}"
-                        // Consider commenting out the next line to allow the pipeline to continue.
-                        // error("Tests failed")
+                        // Optionally, rethrow the error if you want the pipeline to fail at this point.
+                        // throw e
                     }
                 }
             }
         }
+
 
         stage('Deploy to Development') {
             when {
