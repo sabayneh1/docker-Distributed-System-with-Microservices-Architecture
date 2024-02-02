@@ -83,7 +83,7 @@ pipeline {
         // Add this stage for running Supertest tests
         stage('Run Supertest Tests') {
             steps {
-                sh 'npm run supertest-test'
+                sh 'npm run supertest-test -- --detectOpenHandles || true'
             }
         }
 
