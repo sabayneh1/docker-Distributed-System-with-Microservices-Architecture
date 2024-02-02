@@ -12,3 +12,7 @@ if (process.env.NODE_ENV !== 'test') {
     console.log(`Product service listening on port ${port}`);
   });
 }
+
+
+// Export the Express application
+module.exports = app;
