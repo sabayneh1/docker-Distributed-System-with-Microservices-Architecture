@@ -19,6 +19,15 @@
     "supertest": "^6.3.4"
   },
   "jest": {
-    "collectCoverage": true
+    "collectCoverage": true,
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "<rootDir>/auth-service/node_modules/",
+      "<rootDir>/product-service/node_modules/",
+      "<rootDir>/user-service/node_modules/"
+    ],
+    "transformIgnorePatterns": [
+      "/node_modules/"
+    ]
   }
 }
