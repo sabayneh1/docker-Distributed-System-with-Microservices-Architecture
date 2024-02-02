@@ -1,164 +1,124 @@
 pipeline {
-    agent any  // Indicates that this pipeline can run on any available agent
+    agent any
 
     environment {
-        // Define environment variables
         GIT_CREDENTIAL_ID = 'NewGithubSecretText'
         DOCKER_HOST = 'unix:///var/run/docker.sock'
         JAVA_HOME = '/usr/lib/jvm/java-17-openjdk-amd64'
         DOCKERHUB_CREDENTIAL_ID = 'NewDockerHubCredentials'
         IMAGE_TAG = 'sabayneh/distributed-system'
+        TEST_SUCCESS = 'false'
+        DEPLOY_DEV_SUCCESS = 'false'
     }
 
     tools {
-        // Specify the version of Node.js to use
         nodejs "NodeJS-21.6.1"
     }
 
     stages {
-        // Checkout stage: Retrieve code from a Git repository
         stage('Checkout') {
             steps {
                 checkout([$class: 'GitSCM', branches: [[name: '*/main']],
-                    userRemoteConfigs: [[
-                        url: 'https://github.com/sabayneh1/docker-Distributed-System-with-Microservices-Architecture.git',
-                        credentialsId: "${env.GIT_CREDENTIAL_ID}"
-                    ]],
-                    lightweight: true  // Use lightweight checkout for faster execution
+                    userRemoteConfigs: [[url: 'https://github.com/sabayneh1/docker-Distributed-System-with-Microservices-Architecture.git', credentialsId: env.GIT_CREDENTIAL_ID]],
+                    lightweight: true
                 ])
             }
         }
+
         stage('Install dependencies') {
             steps {
                 script {
-                    // Check if the 'node_modules' directory exists in the workspace
                     if (!fileExists('node_modules/')) {
-                        // If 'node_modules' directory does not exist, retrieve it from the stash
-                        // This is useful for reusing 'node_modules' across pipeline runs to save time
                         unstash 'nodeModules'
                     }
+                    sh 'npm ci'
                 }
-                // Run 'npm ci' to install dependencies based on the 'package-lock.json' file
-                // This command is preferred in continuous integration setups as it is faster
-                // and ensures consistent installations across environments
-                sh 'npm ci'
             }
         }
-
-
-
 
         stage('Cache npm dependencies') {
             steps {
                 script {
-                    // Stash the 'node_modules' directory for later use in the pipeline or future runs
-                    // This is useful for caching dependencies so they don't need to be reinstalled
-                    // every time, speeding up the build process
                     stash(name: 'nodeModules', includes: 'node_modules/')
                 }
             }
         }
 
-
-        // Docker build and push stage: Build a Docker image and push it to Docker Hub
         stage('Docker Build and Push') {
             steps {
                 script {
-                    // Login to Docker registry and push the image
-                    docker.withRegistry('https://registry.hub.docker.com', "${env.DOCKERHUB_CREDENTIAL_ID}") {
-                        def customImage = docker.build("${env.IMAGE_TAG}")
+                    docker.withRegistry('https://registry.hub.docker.com', env.DOCKERHUB_CREDENTIAL_ID) {
+                        def customImage = docker.build(env.IMAGE_TAG)
                         customImage.push()
                     }
                 }
             }
         }
 
-        stages {
-        // Run Jest tests and set TEST_SUCCESS on success
-            stage('Run Jest Tests') {
-                steps {
-                    script {
-                        try {
-                            sh 'npm run test -- --detectOpenHandles'
-                            env.TEST_SUCCESS = 'true'
-                        } catch (Exception e) {
-                            env.TEST_SUCCESS = 'false'
-                            error("Tests failed")
-                        }
-                    }
-                }
-            }
-
-            // Deploy to Development only if tests pass
-            stage('Deploy to Development') {
-                when {
-                    expression { env.TEST_SUCCESS == 'true' }
-                }
-                steps {
-                    script {
-                        try {
-                            echo "Deploying using Docker Compose in development stage..."
-                            sh 'docker-compose down'
-                            sh 'docker-compose up -d'
-                            env.DEPLOY_DEV_SUCCESS = 'true'
-                        } catch (Exception e) {
-                            env.DEPLOY_DEV_SUCCESS = 'false'
-                            error("Development deployment failed")
-                        }
-                    }
-                }
-            }
-
-            // Deploy to Production only if development deployment is successful
-            stage('Deploy to Production') {
-                when {
-                    allOf {
-                        branch 'main'
-                        expression { env.DEPLOY_DEV_SUCCESS == 'true' }
-                    }
-                }
-                steps {
-                    script {
-                        echo "Deploying using Docker Compose for production..."
-                        sh 'docker-compose -f docker-compose.yaml -f docker-compose.prod.yml up -d --no-deps --build --force-recreate'
+        stage('Run Jest Tests') {
+            steps {
+                script {
+                    try {
+                        sh 'npm run test -- --detectOpenHandles'
+                        env.TEST_SUCCESS = 'true'
+                    } catch (Exception e) {
+                        env.TEST_SUCCESS = 'false'
+                        error("Tests failed")
                     }
                 }
             }
         }
 
-        // SonarQube analysis stage: Perform code quality analysis using SonarQube
+        stage('Deploy to Development') {
+            when {
+                expression { env.TEST_SUCCESS == 'true' }
+            }
+            steps {
+                script {
+                    echo "Deploying using Docker Compose in development stage..."
+                    sh 'docker-compose down'
+                    sh 'docker-compose up -d'
+                    env.DEPLOY_DEV_SUCCESS = 'true'
+                }
+            }
+        }
+
+        stage('Deploy to Production') {
+            when {
+                allOf {
+                    branch 'main'
+                    expression { env.DEPLOY_DEV_SUCCESS == 'true' }
+                }
+            }
+            steps {
+                script {
+                    echo "Deploying using Docker Compose for production..."
+                    sh 'docker-compose -f docker-compose.yaml -f docker-compose.prod.yml up -d --no-deps --build --force-recreate'
+                }
+            }
+        }
+
         stage('SonarQube analysis') {
             steps {
                 script {
                     withSonarQubeEnv('SonarQube') {
-                        // Use SonarQube token for authentication
                         withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
-                            // Define the SonarQube scanner and execute the analysis
                             def sonarQubeScannerHome = tool 'SonarQube_5.0.1.3006'
                             env.PATH = "${sonarQubeScannerHome}/bin:${env.PATH}"
-                            sh '''
-                            sonar-scanner \
-                            -Dsonar.projectKey=DistributedMicroservices-jenkins \
-                            -Dsonar.sources=. \
-                            -Dsonar.host.url=http://35.183.179.161:9000 \
-                            -Dsonar.login=$SONAR_TOKEN
-                            '''
+                            sh 'sonar-scanner -Dsonar.projectKey=DistributedMicroservices-jenkins -Dsonar.sources=. -Dsonar.host.url=http://35.183.179.161:9000 -Dsonar.login=$SONAR_TOKEN'
                         }
                     }
                 }
             }
         }
-    } // This closing brace ends the stages block
+    }
 
     post {
-        // Post-build actions
         always {
-            // Custom command to clean up the workspace while preserving node_modules
             echo "Custom workspace cleanup"
             sh 'find . -path ./node_modules -prune -o -type f -exec rm -f {} +'
         }
         success {
-            // Send email notification on successful build
             emailext(
                 subject: "BUILD SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                 body: "The Jenkins job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' was successful.",
