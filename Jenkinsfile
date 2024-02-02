@@ -46,6 +46,8 @@ pipeline {
         }
 
 
+
+
         stage('Cache npm dependencies') {
             steps {
                 script {
@@ -160,7 +162,7 @@ pipeline {
             }
         }
     }
-
+}
     post {
         // Post-build actions
         always {
