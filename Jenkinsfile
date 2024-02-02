@@ -55,41 +55,32 @@ pipeline {
             }
         }
 
-        stages {
-            stage('Run Jest Tests') {
-                steps {
-                    script {
-                        // Reset TEST_SUCCESS to false at the beginning of the stage
-                        env.TEST_SUCCESS = 'false'
-                        try {
-                            sh 'npm run test -- --detectOpenHandles'
-                            // If the command succeeds, mark TEST_SUCCESS as true
-                            env.TEST_SUCCESS = 'true'
-                        } catch (Exception e) {
-                            // If there's an exception, keep TEST_SUCCESS as false
-                            echo "Tests failed due to an exception."
-                        }
-                        // Echo the TEST_SUCCESS value for debugging
-                        echo "TEST_SUCCESS is set to ${env.TEST_SUCCESS}"
+        stage('Run Jest Tests') {
+            steps {
+                script {
+                    env.TEST_SUCCESS = 'false'
+                    try {
+                        sh 'npm run test -- --detectOpenHandles'
+                        env.TEST_SUCCESS = 'true'
+                    } catch (Exception e) {
+                        echo "Tests failed due to an exception."
                     }
+                    echo "TEST_SUCCESS is set to ${env.TEST_SUCCESS}"
                 }
             }
+        }
 
         stage('Deploy to Development') {
             when {
-                // Condition to check if TEST_SUCCESS is true
                 expression { env.TEST_SUCCESS == 'true' }
             }
             steps {
                 script {
-                    // Reset DEPLOY_DEV_SUCCESS to false at the beginning of the stage
                     env.DEPLOY_DEV_SUCCESS = 'false'
                     echo "Deploying using Docker Compose in development stage..."
                     sh 'docker-compose down'
                     sh 'docker-compose up -d'
-                    // If deployment commands succeed, mark DEPLOY_DEV_SUCCESS as true
                     env.DEPLOY_DEV_SUCCESS = 'true'
-                    // Echo the DEPLOY_DEV_SUCCESS value for debugging
                     echo "DEPLOY_DEV_SUCCESS is set to ${env.DEPLOY_DEV_SUCCESS}"
                 }
             }
@@ -97,7 +88,6 @@ pipeline {
 
         stage('Deploy to Production') {
             when {
-                // Condition to check if DEPLOY_DEV_SUCCESS is true
                 expression { env.DEPLOY_DEV_SUCCESS == 'true' }
             }
             steps {
@@ -107,8 +97,6 @@ pipeline {
                 }
             }
         }
-    }
-
 
         stage('SonarQube analysis') {
             steps {
@@ -137,6 +125,7 @@ pipeline {
                 to: '533a2228-3250-4446-b5e5-925e6023c6b1@mailslurp.com'
             )
         }
+
         failure {
             // Send email notification on build failure
             emailext(
