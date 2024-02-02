@@ -75,39 +75,39 @@ pipeline {
                 }
             }
 
-            stage('Deploy to Development') {
-                when {
-                    // Condition to check if TEST_SUCCESS is true
-                    expression { env.TEST_SUCCESS == 'true' }
-                }
-                steps {
-                    script {
-                        // Reset DEPLOY_DEV_SUCCESS to false at the beginning of the stage
-                        env.DEPLOY_DEV_SUCCESS = 'false'
-                        echo "Deploying using Docker Compose in development stage..."
-                        sh 'docker-compose down'
-                        sh 'docker-compose up -d'
-                        // If deployment commands succeed, mark DEPLOY_DEV_SUCCESS as true
-                        env.DEPLOY_DEV_SUCCESS = 'true'
-                        // Echo the DEPLOY_DEV_SUCCESS value for debugging
-                        echo "DEPLOY_DEV_SUCCESS is set to ${env.DEPLOY_DEV_SUCCESS}"
-                    }
-                }
+        stage('Deploy to Development') {
+            when {
+                // Condition to check if TEST_SUCCESS is true
+                expression { env.TEST_SUCCESS == 'true' }
             }
-
-            stage('Deploy to Production') {
-                when {
-                    // Condition to check if DEPLOY_DEV_SUCCESS is true
-                    expression { env.DEPLOY_DEV_SUCCESS == 'true' }
-                }
-                steps {
-                    script {
-                        echo "Deploying using Docker Compose for production..."
-                        sh 'docker-compose -f docker-compose.yaml -f docker-compose.prod.yml up -d --no-deps --build --force-recreate'
-                    }
+            steps {
+                script {
+                    // Reset DEPLOY_DEV_SUCCESS to false at the beginning of the stage
+                    env.DEPLOY_DEV_SUCCESS = 'false'
+                    echo "Deploying using Docker Compose in development stage..."
+                    sh 'docker-compose down'
+                    sh 'docker-compose up -d'
+                    // If deployment commands succeed, mark DEPLOY_DEV_SUCCESS as true
+                    env.DEPLOY_DEV_SUCCESS = 'true'
+                    // Echo the DEPLOY_DEV_SUCCESS value for debugging
+                    echo "DEPLOY_DEV_SUCCESS is set to ${env.DEPLOY_DEV_SUCCESS}"
                 }
             }
         }
+
+        stage('Deploy to Production') {
+            when {
+                // Condition to check if DEPLOY_DEV_SUCCESS is true
+                expression { env.DEPLOY_DEV_SUCCESS == 'true' }
+            }
+            steps {
+                script {
+                    echo "Deploying using Docker Compose for production..."
+                    sh 'docker-compose -f docker-compose.yaml -f docker-compose.prod.yml up -d --no-deps --build --force-recreate'
+                }
+            }
+        }
+    }
 
 
         stage('SonarQube analysis') {
@@ -145,5 +145,5 @@ pipeline {
                 to: '533a2228-3250-4446-b5e5-925e6023c6b1@mailslurp.com'
             )
         }
-    } // This closing brace ends the post block
-} // This closing brace ends the pipeline block
+    }
+}
