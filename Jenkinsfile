@@ -147,7 +147,7 @@ pipeline {
                             sonar-scanner \
                             -Dsonar.projectKey=DistributedMicroservices-jenkins \
                             -Dsonar.sources=. \
-                            -Dsonar.host.url=http://3.99.131.38:9000 \
+                            -Dsonar.host.url=http://35.183.94.205:9000 \
                             -Dsonar.login=$SONAR_TOKEN
                             '''
                         }
