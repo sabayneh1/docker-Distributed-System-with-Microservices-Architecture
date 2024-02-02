@@ -13,3 +13,6 @@ if (process.env.NODE_ENV !== 'test') {
   });
 }
 
+
+// Export the Express application
+module.exports = app;
