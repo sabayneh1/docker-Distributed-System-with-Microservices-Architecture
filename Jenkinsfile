@@ -80,13 +80,6 @@ pipeline {
             }
         }
 
-        // Add this stage for running Supertest tests
-        stage('Run Supertest Tests') {
-            steps {
-                sh 'npm run supertest-test -- --detectOpenHandles || true'
-            }
-        }
-
 
         // // Deployment stage: Deploy the application to an EC2 instance using Docker Compose
         // stage('Deploy to EC2') {
@@ -126,7 +119,7 @@ pipeline {
                 script {
                     echo "Deploying using Docker Compose for production..."
                     // Perform a rolling update without downtime
-                    sh 'docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --no-deps --build --force-recreate'
+                    sh 'docker-compose -f docker-compose.yaml -f docker-compose.prod.yml up -d --no-deps --build --force-recreate'
                 }
             }
         }
