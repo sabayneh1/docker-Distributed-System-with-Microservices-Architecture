@@ -45,6 +45,7 @@ pipeline {
             }
         }
 
+
         stage('Cache npm dependencies') {
             steps {
                 script {
@@ -70,18 +71,69 @@ pipeline {
             }
         }
 
-        // Deployment stage: Deploy the application to an EC2 instance using Docker Compose
-        stage('Deploy to EC2') {
+        // Add this stage for running Jest tests
+        stage('Run Jest Tests') {
             steps {
-                sh '''
-                    echo "Deploying using Docker Compose..."
-                    # Stop and remove current containers
-                    docker-compose down
-                    # Build and start new containers
-                    docker-compose up -d --build
-                '''
+                sh 'npm run test'
             }
         }
+
+        // Add this stage for running Supertest tests
+        stage('Run Supertest Tests') {
+            steps {
+                sh 'npm run supertest-test'
+            }
+        }
+
+
+        // // Deployment stage: Deploy the application to an EC2 instance using Docker Compose
+        // stage('Deploy to EC2') {
+        //     steps {
+        //         sh '''
+        //             echo "Deploying using Docker Compose..."
+        //             # Stop and remove current containers
+        //             docker-compose down
+        //             # Build and start new containers
+        //             docker-compose up -d --build
+        //         '''
+        //     }
+        // }
+
+        stage('Deploy to Development') {
+            when {
+                branch 'develop'
+            }
+            steps {
+                // Only proceed if this is the development branch
+                script {
+                    // Deploy using Docker Compose for development
+                    // Assumes docker-compose.override.yml is set up for development
+                     echo "Deploying using Docker Compose in development stage..."
+                    //# Stop and remove current containers
+                    sh 'docker-compose down'
+                    //# Build and start new containers
+                    sh 'docker-compose up -d'
+                }
+            }
+        }
+
+        stages {
+            // ... (other stages)
+
+            stage('Deploy to Production') {
+                when {
+                    branch 'main'
+                }
+                steps {
+                    script {
+                        echo "Deploying using Docker Compose for production..."
+
+                        // Perform a rolling update without downtime
+                        sh 'docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --no-deps --build --force-recreate'
+                    }
+                }
+            }
+
 
         // SonarQube analysis stage: Perform code quality analysis using SonarQube
         stage('SonarQube analysis') {

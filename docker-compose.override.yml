@@ -1,0 +1,8 @@
+# docker-compose.override.yml - Development overrides
+version: '3'
+services:
+  product-service:
+    volumes:
+      - ./product-service:/app  # Mounts the code into the container for live reloading
+    environment:
+      NODE_ENV: development  # Sets the environment to development
