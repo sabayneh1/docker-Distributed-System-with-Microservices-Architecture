@@ -119,23 +119,19 @@ pipeline {
             }
         }
 
-        stages {
-            // ... (other stages)
-
-            stage('Deploy to Production') {
-                when {
-                    branch 'main'
-                }
-                steps {
-                    script {
-                        echo "Deploying using Docker Compose for production..."
-
-                        // Perform a rolling update without downtime
-                        sh 'docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --no-deps --build --force-recreate'
-                    }
+        // This part was moved out from an incorrect nested `stages` block
+        stage('Deploy to Production') {
+            when {
+                branch 'main'
+            }
+            steps {
+                script {
+                    echo "Deploying using Docker Compose for production..."
+                    // Perform a rolling update without downtime
+                    sh 'docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --no-deps --build --force-recreate'
                 }
             }
-
+        }
 
         // SonarQube analysis stage: Perform code quality analysis using SonarQube
         stage('SonarQube analysis') {
@@ -144,11 +140,9 @@ pipeline {
                     withSonarQubeEnv('SonarQube') {
                         // Use SonarQube token for authentication
                         withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
-
                             // Define the SonarQube scanner and execute the analysis
                             def sonarQubeScannerHome = tool 'SonarQube_5.0.1.3006'
                             env.PATH = "${sonarQubeScannerHome}/bin:${env.PATH}"
-
                             sh '''
                             sonar-scanner \
                             -Dsonar.projectKey=DistributedMicroservices-jenkins \
@@ -161,8 +155,8 @@ pipeline {
                 }
             }
         }
-    }
-}
+    } // This closing brace ends the stages block
+
     post {
         // Post-build actions
         always {
@@ -186,5 +180,5 @@ pipeline {
                 to: '533a2228-3250-4446-b5e5-925e6023c6b1@mailslurp.com'
             )
         }
-    }
-}
+    } // This closing brace ends the post block
+} // This closing brace ends the pipeline block
