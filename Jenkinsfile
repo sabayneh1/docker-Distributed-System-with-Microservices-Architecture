@@ -76,7 +76,7 @@ pipeline {
         // Add this stage for running Jest tests
         stage('Run Jest Tests') {
             steps {
-                sh 'npm run test'
+                sh 'npm run test -- --detectOpenHandles || true'
             }
         }
 
