@@ -55,7 +55,7 @@ pipeline {
             }
         }
 
-         stages {
+        stages {
             stage('Run Jest Tests') {
                 steps {
                     script {
@@ -108,7 +108,6 @@ pipeline {
                 }
             }
         }
-
 
 
         stage('SonarQube analysis') {
