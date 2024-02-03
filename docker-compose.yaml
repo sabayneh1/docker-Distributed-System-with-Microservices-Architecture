@@ -23,7 +23,7 @@ services:
       - backend
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
-      interval: 10s
+      interval: 20s
       timeout: 5s
       retries: 3
 
@@ -33,7 +33,7 @@ services:
       - backend
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3002/health"]
-      interval: 10s
+      interval: 20s
       timeout: 5s
       retries: 3
 
@@ -43,7 +43,7 @@ services:
       - backend
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3003/health"]
-      interval: 10s
+      interval: 20s
       timeout: 5s
       retries: 3
 
