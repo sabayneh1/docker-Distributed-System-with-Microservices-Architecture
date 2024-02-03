@@ -1,6 +1,11 @@
-# docker-compose.override.yml - Development overrides
 version: '3'
 services:
+  auth-service:
+    volumes:
+      - ./auth-service:/usr/src/app
+  user-service:
+    volumes:
+      - ./user-service:/usr/src/app
   product-service:
     volumes:
       - ./product-service:/app  # Mounts the code into the container for live reloading
