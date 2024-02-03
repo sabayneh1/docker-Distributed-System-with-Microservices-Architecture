@@ -1,4 +1,4 @@
-version: '3'
+version: '3.4' # Use version 3.4 or higher to ensure healthcheck support
 
 services:
   nginx:
@@ -8,16 +8,17 @@ services:
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
-      - auth-service
-      - user-service
-      - product-service
+      auth-service:
+        condition: service_healthy
+      user-service:
+        condition: service_healthy
+      product-service:
+        condition: service_healthy
     networks:
       - backend
 
   auth-service:
     build: ./auth-service
-    ports:
-      - "3001:3001"
     networks:
       - backend
     healthcheck:
@@ -28,8 +29,6 @@ services:
 
   user-service:
     build: ./user-service
-    ports:
-      - "3002:3002"
     networks:
       - backend
     healthcheck:
@@ -37,24 +36,16 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
-    depends_on:
-      auth-service:
-        condition: service_healthy
 
   product-service:
     build: ./product-service
-    ports:
-      - "3003:3003"
     networks:
       - backend
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3003/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-    depends_on:
-      user-service:
-        condition: service_healthy
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
 networks:
   backend:
