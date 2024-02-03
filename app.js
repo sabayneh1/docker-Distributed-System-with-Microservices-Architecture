@@ -6,6 +6,11 @@ app.get('/', (req, res) => {
   res.send('Hello, this is the product service!');
 });
 
+// Add a health check route
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
+});
+
 if (process.env.NODE_ENV !== 'test') {
   // Listen on all network interfaces
   app.listen(port, '0.0.0.0', () => {
