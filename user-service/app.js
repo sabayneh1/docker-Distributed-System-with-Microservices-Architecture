@@ -6,6 +6,11 @@ app.get('/', (req, res) => {
   res.send('User Service: User authentication and authorization.');
 });
 
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
+});
+
+
 // Conditionally listen on the port if not in test environment
 if (process.env.NODE_ENV !== 'test') {
   app.listen(port, '0.0.0.0', () => {
