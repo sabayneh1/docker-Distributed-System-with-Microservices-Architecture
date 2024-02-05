@@ -22,30 +22,30 @@ services:  # Defines the services that make up the application
     networks:  # Attaches the service to the specified networks
       - backend
     healthcheck:  # Configures a health check for the service
-      test: ["CMD", "curl", "-f", "http://auth-service:3001/health"]  # Defines the command to test the health of the service
-      interval: 30s  # Specifies the interval between health checks
-      timeout: 10s  # Sets the timeout for a health check
-      retries: 3  # Specifies the number of retries before considering the service unhealthy
+      test: ["CMD", "curl", "-f", "http://auth-service:3001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   user-service:  # Configuration for the user-service
-    build: ./user-service  # Specifies the build context for the service
-    networks:  # Attaches the service to the specified networks
+    build: ./user-service
+    networks:
       - backend
     healthcheck:  # Configures a health check for the service
-      test: ["CMD", "curl", "-f", "http://user-service:3002/health"]  # Defines the command to test the health of the service
-      interval: 30s  # Specifies the interval between health checks
-      timeout: 10s  # Sets the timeout for a health check
-      retries: 3  # Specifies the number of retries before considering the service unhealthy
+      test: ["CMD", "curl", "-f", "http://user-service:3002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   product-service:  # Configuration for the product-service
-    build: ./product-service  # Specifies the build context for the service
-    networks:  # Attaches the service to the specified networks
+    build: ./product-service
+    networks:
       - backend
-    healthcheck:  # Configures a health check for the service
-      test: ["CMD", "curl", "-f", "http://product-service:3003/health"]  # Defines the command to test the health of the service
-      interval: 30s  # Specifies the interval between health checks
-      timeout: 10s  # Sets the timeout for a health check
-      retries: 3  # Specifies the number of retries before considering the service unhealthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://product-service:3003/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3  
 
 networks:  # Defines networks that can be attached to services
   backend:  # Configuration for the backend network
