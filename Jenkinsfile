@@ -85,7 +85,7 @@ pipeline {
             when {
                 // Temporarily comment out for debugging
                 // branch 'develop'
-                expression { true } // This allows the stage to run for any branch
+                expression { true } // This allows the stage to run for any branchs
             }
             steps {
                 script {
