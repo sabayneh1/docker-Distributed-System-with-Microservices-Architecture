@@ -1,106 +1,52 @@
-# version: '3.4' # Use version 3.4 or higher to ensure healthcheck support
+version: '3.4'  # Specifies the version of the Docker Compose file format
 
-# services:
-#   nginx:
-#     image: nginx:latest
-#     ports:
-#       - "80:80"
-#     volumes:
-#       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-#     depends_on:
-#       auth-service:
-#         condition: service_healthy
-#       user-service:
-#         condition: service_healthy
-#       product-service:
-#         condition: service_healthy
-#     networks:
-#       - backend
+services:  # Defines the services that make up the application
 
-#   auth-service:
-#     build: ./auth-service
-#     networks:
-#       - backend
-#     healthcheck:
-#       test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
-#       interval: 30s
-#       timeout: 10s
-#       retries: 3
-
-#   user-service:
-#     build: ./user-service
-#     networks:
-#       - backend
-#     healthcheck:
-#       test: ["CMD", "curl", "-f", "http://localhost:3002/health"]
-#       interval: 30s
-#       timeout: 10s
-#       retries: 3
-
-#   product-service:
-#     build: ./product-service
-#     networks:
-#       - backend
-#     healthcheck:
-#       test: ["CMD", "curl", "-f", "http://localhost:3003/health"]
-#       interval: 30s
-#       timeout: 10s
-#       retries: 3
-
-# networks:
-#   backend:
-#     driver: bridge
-
-##########################################
-
-version: '3.4'
-
-services:
-  nginx:
-    image: nginx:latest
-    ports:
+  nginx:  # Configuration for the nginx service
+    image: nginx:latest  # Specifies the Docker image to be used for the nginx service
+    ports:  # Maps host port 80 to container port 80
       - "80:80"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./entrypoint.sh:/docker-entrypoint.d/custom-entrypoint.sh
-    networks:
+    volumes:  # Mounts the specified host directories or volumes into the container
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro  # Mounts the nginx configuration file
+      - ./entrypoint.sh:/docker-entrypoint.d/custom-entrypoint.sh  # Mounts a custom entrypoint script
+    networks:  # Attaches the service to the specified networks
       - backend
-    depends_on:
+    depends_on:  # Specifies the services that this service depends on
       - auth-service
       - user-service
       - product-service
-    command: ["/docker-entrypoint.d/custom-entrypoint.sh"]
-  auth-service:
-    build: ./auth-service
-    networks:
+    command: ["/docker-entrypoint.d/custom-entrypoint.sh"]  # Overrides the default command for the container
+
+  auth-service:  # Configuration for the auth-service
+    build: ./auth-service  # Specifies the build context for the service
+    networks:  # Attaches the service to the specified networks
       - backend
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://auth-service:3001/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+    healthcheck:  # Configures a health check for the service
+      test: ["CMD", "curl", "-f", "http://auth-service:3001/health"]  # Defines the command to test the health of the service
+      interval: 30s  # Specifies the interval between health checks
+      timeout: 10s  # Sets the timeout for a health check
+      retries: 3  # Specifies the number of retries before considering the service unhealthy
 
-  user-service:
-    build: ./user-service
-    networks:
+  user-service:  # Configuration for the user-service
+    build: ./user-service  # Specifies the build context for the service
+    networks:  # Attaches the service to the specified networks
       - backend
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://user-service:3002/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+    healthcheck:  # Configures a health check for the service
+      test: ["CMD", "curl", "-f", "http://user-service:3002/health"]  # Defines the command to test the health of the service
+      interval: 30s  # Specifies the interval between health checks
+      timeout: 10s  # Sets the timeout for a health check
+      retries: 3  # Specifies the number of retries before considering the service unhealthy
 
-  product-service:
-    build: ./product-service
-    networks:
+  product-service:  # Configuration for the product-service
+    build: ./product-service  # Specifies the build context for the service
+    networks:  # Attaches the service to the specified networks
       - backend
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://product-service:3003/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+    healthcheck:  # Configures a health check for the service
+      test: ["CMD", "curl", "-f", "http://product-service:3003/health"]  # Defines the command to test the health of the service
+      interval: 30s  # Specifies the interval between health checks
+      timeout: 10s  # Sets the timeout for a health check
+      retries: 3  # Specifies the number of retries before considering the service unhealthy
 
-networks:
-  backend:
-    driver: bridge
-
+networks:  # Defines networks that can be attached to services
+  backend:  # Configuration for the backend network
+    driver: bridge  # Specifies the network driver used for the network
