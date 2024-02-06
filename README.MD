@@ -79,9 +79,11 @@ Deployment Process
 Deployments are automated via Jenkins, with manual steps provided for development and production environments:
 
 Development Deployment: docker-compose up -d
+
 Production Deployment: docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d --no-deps --build --force-recreate
 
 Nginx Configuration
+
 The nginx/ directory contains configurations to route traffic to services, acting as a reverse proxy.
 
 Testing
