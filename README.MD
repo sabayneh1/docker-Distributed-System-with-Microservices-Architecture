@@ -18,6 +18,8 @@ This repository demonstrates a robust implementation of a distributed microservi
   - [Basic Git Setup](#basic-git-setup)
 - [Accessing the Application](#accessing-the-application)
 
+##project-structure
+
 The project is structured as follows to ensure modularity and ease of maintenance:
 
 """
