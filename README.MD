@@ -28,18 +28,28 @@ The project is structured as follows to ensure modularity and ease of maintenanc
 
 ├── nginx/ # Nginx reverse proxy configuration
 
-"├── docker-compose.yaml # Docker Compose file for local development
-"├── docker-compose.override.yml # Overrides for Docker Compose
-"├── docker-compose.prod.yaml # Docker Compose file for production deployment
-"├── Dockerfile # Dockerfile for building services
-"├── Jenkinsfile # Jenkins pipeline definition
-"├── sonar-project.properties # SonarQube configuration
-"├── package.json # Node.js dependencies and scripts
-"├── package-lock.json # Locked versions of Node.js dependencies
-"├── app.js # Entry point for a mock service
+├── docker-compose.yaml # Docker Compose file for local development
+
+├── docker-compose.override.yml # Overrides for Docker Compose
+
+├── docker-compose.prod.yaml # Docker Compose file for production deployment
+
+├── Dockerfile # Dockerfile for building services
+
+├── Jenkinsfile # Jenkins pipeline definition
+
+├── sonar-project.properties # SonarQube configuration
+
+├── package.json # Node.js dependencies and scripts
+
+├── package-lock.json # Locked versions of Node.js dependencies
+
+├── app.js # Entry point for a mock service
+
 ├── app.test.js # Integration tests
+
 └── entrypoint.sh # Custom entrypoint script for Docker    
-'''
+
 
 
 Services Overview
