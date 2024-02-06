@@ -4,20 +4,7 @@ This repository demonstrates a robust implementation of a distributed microservi
 ## Table of Contents
 [TOC]
 
-- [Project Structure](#project-structure)
-- [Services Overview](#services-overview)
-- [CI/CD Pipeline with Jenkins](#cicd-pipeline-with-jenkins)
-- [Deployment Process](#deployment-process)
-- [Nginx Configuration](#nginx-configuration)
-- [Testing](#testing)
-- [SonarQube Integration](#sonarqube-integration)
-- [Setting Up the Project from Scratch](#setting-up-the-project-from-scratch)
-  - [Setting Up Jenkins](#setting-up-jenkins)
-  - [Setting Up Docker and Docker Compose](#setting-up-docker-and-docker-compose)
-  - [Setting Up SonarQube Container](#setting-up-sonarqube-container)
-  - [Setting Up NPM and Project Dependencies](#setting-up-npm-and-project-dependencies)
-  - [Basic Git Setup](#basic-git-setup)
-- [Accessing the Application](#accessing-the-application)
+#Project-structure
 
 #project-structure
 
