@@ -128,17 +128,17 @@ Update your package manage
 
 Install Jenkins:
 
-  sudo apt update
-  
-  sudo apt install jenkins -y
+    sudo apt update
+    
+    sudo apt install jenkins -y
 
 Start Jenkins:
 
-  sudo systemctl start jenkins
+    sudo systemctl start jenkins
 
 Enable Jenkins to run at boot:
 
-  sudo systemctl enable jenkins
+    sudo systemctl enable jenkins
 
 Access Jenkins:
 
@@ -151,17 +151,17 @@ Follow the instructions to complete the installation.
 
 Install Docker:
 
-  sudo apt update
+    sudo apt update
+  
+    sudo apt install apt-transport-https ca-certificates curl software-properties-common -y
+  
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 
-  sudo apt install apt-transport-https ca-certificates curl software-properties-common -y
-
-  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-
-  sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-
-  sudo apt update
-
-  sudo apt install docker-ce -y
+    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+  
+    sudo apt update
+  
+    sudo apt install docker-ce -y
 
 
 Install Docker Compose:
@@ -170,16 +170,16 @@ Check the latest release of Docker Compose on its GitHub releases page.
 
 Replace 1.29.2 with the latest version in the command below:
 
-  sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-
-  sudo chmod +x /usr/local/bin/docker-compose
+    sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+  
+    sudo chmod +x /usr/local/bin/docker-compose
 
 
 ### Setting Up SonarQube Container
 
 Run SonarQube as a Docker container:
 
-  sudo docker run -d --name sonarqube -p 9000:9000 sonarqube
+    sudo docker run -d --name sonarqube -p 9000:9000 sonarqube
 
 Access SonarQube at http://your_server_ip_or_domain:9000.
 
@@ -189,37 +189,37 @@ Access SonarQube at http://your_server_ip_or_domain:9000.
 
 Install Node.js and NPM:
 
-  sudo apt update
-
-  sudo apt install nodejs npm -y
+    sudo apt update
+  
+    sudo apt install nodejs npm -y
 
 
 Install project dependencies:
 
 Navigate to your project directory:
 
-  cd path/to/your/project
+    cd path/to/your/project
 
 Install dependencies specified in package.json:
 
-  npm install
+    npm install
 
 
 ### Basic Git Setup
 
 Install Git:
 
-  sudo apt install git -y
+    sudo apt install git -y
 
 Configure Git (replace with your details):
 
-  git config --global user.name "Your Name"
-
-  git config --global user.email "youremail@example.com"
+      git config --global user.name "Your Name"
+    
+      git config --global user.email "youremail@example.com"
 
 Clone your project (replace URL with your repository URL):
 
-  git clone https://github.com/sabayneh1/docker-Distributed-System-with-Microservices-Architecture.git
+      git clone https://github.com/sabayneh1/docker-Distributed-System-with-Microservices-Architecture.git
 
 
 ## Accessing the Application
