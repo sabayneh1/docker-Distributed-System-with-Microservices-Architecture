@@ -223,7 +223,9 @@ git clone https://github.com/sabayneh1/docker-Distributed-System-with-Microservi
 Access the services through the Nginx reverse proxy by navigating to your domain or public IP:
 
 /auth/ routes to the auth-service.
+
 /users/ routes to the user-service.
+
 /products/ routes to the product-service.
 
 This comprehensive setup guide ensures that all prerequisites for running the distributed microservices architecture project are met, providing a smooth start for developers and stakeholders.
