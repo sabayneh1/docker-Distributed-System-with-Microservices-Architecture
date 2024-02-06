@@ -88,11 +88,13 @@ SonarQube Analysis: Conducting code quality and security scans.
 ## Deployment Process
 Deployments are automated via Jenkins, with manual steps provided for development and production environments:
 
-Development Deployment:     
-  docker-compose up -d
+Development Deployment:   
+
+      docker-compose up -d
 
 Production Deployment:
-  docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d --no-deps --build --force-recreate
+
+      docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d --no-deps --build --force-recreate
 
 ## Nginx Configuration
 
