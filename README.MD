@@ -36,6 +36,8 @@ The project is structured as follows to ensure modularity and ease of maintenanc
 ├── app.test.js                   # Integration tests
 └── entrypoint.sh                 # Custom entrypoint script for Docker
 
+
+
 Services Overview
 
 Auth Service: Manages authentication and authorization processes.
