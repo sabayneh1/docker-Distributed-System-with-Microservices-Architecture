@@ -1,4 +1,4 @@
-                    ##  Distributed Microservices Architecture with CI/CD Pipeline
+                    ## Distributed Microservices Architecture with CI/CD Pipeline
 
 
 This repository demonstrates a robust implementation of a distributed microservices architecture, utilizing Docker and Docker Compose for orchestrating services, alongside Jenkins for Continuous Integration and Continuous Deployment (CI/CD). It features an Nginx reverse proxy to efficiently route requests across three core services: auth-service, user-service, and product-service.
