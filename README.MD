@@ -22,9 +22,12 @@ The project is structured as follows to ensure modularity and ease of maintenanc
 
 ├── auth-service/ # Handles authentication and authorization
 
-"├── user-service/ # Manages user profiles and data"
-"├── product-service/ # Provides product catalog information
-"├── nginx/ # Nginx reverse proxy configuration
+├── user-service/ # Manages user profiles and data
+
+├── product-service/ # Provides product catalog information
+
+├── nginx/ # Nginx reverse proxy configuration
+
 "├── docker-compose.yaml # Docker Compose file for local development
 "├── docker-compose.override.yml # Overrides for Docker Compose
 "├── docker-compose.prod.yaml # Docker Compose file for production deployment
