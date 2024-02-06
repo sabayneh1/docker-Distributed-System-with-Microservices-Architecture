@@ -97,7 +97,7 @@ pipeline {
         }
 
 
-        // This part was moved out from an incorrect nested `stages` block
+       
         stage('Deploy to Production') {
             when {
                 branch 'main'
