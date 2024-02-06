@@ -19,7 +19,7 @@ This repository demonstrates a robust implementation of a distributed microservi
 - [Accessing the Application](#accessing-the-application)
 
 The project is structured as follows to ensure modularity and ease of maintenance:
-
+"""
 ├── auth-service/ # Handles authentication and authorization
 
 ├── user-service/ # Manages user profiles and data
@@ -49,7 +49,7 @@ The project is structured as follows to ensure modularity and ease of maintenanc
 ├── app.test.js # Integration tests
 
 └── entrypoint.sh # Custom entrypoint script for Docker    
-
+"""
 
 
 Services Overview
