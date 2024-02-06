@@ -4,7 +4,7 @@ This repository demonstrates a robust implementation of a distributed microservi
 ## Table of Contents
 
 - [Project Structure](#project-structure)
-- [Services Overview](#Services Overview)
+- [Services Overview](#services-overview)
 - [CI/CD Pipeline with Jenkins](#cicd-pipeline-with-jenkins)
 - [Deployment Process](#deployment-process)
 - [Nginx Configuration](#nginx-configuration)
