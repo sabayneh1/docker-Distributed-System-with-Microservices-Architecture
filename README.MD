@@ -4,7 +4,7 @@ This repository demonstrates a robust implementation of a distributed microservi
 ## Table of Contents
 
 - [Project Structure](#project-structure)
-- [Services Overview](#services-overview)
+- [Services Overview](#Services Overview)
 - [CI/CD Pipeline with Jenkins](#cicd-pipeline-with-jenkins)
 - [Deployment Process](#deployment-process)
 - [Nginx Configuration](#nginx-configuration)
@@ -19,6 +19,7 @@ This repository demonstrates a robust implementation of a distributed microservi
 - [Accessing the Application](#accessing-the-application)
 
 The project is structured as follows to ensure modularity and ease of maintenance:
+
 """
 ├── auth-service/ # Handles authentication and authorization
 
