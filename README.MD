@@ -113,16 +113,16 @@ To get started with this project on an Ubuntu server (e.g., an AWS EC2 instance)
 
 Update your package manage
 
-sudo apt update
-
-Install Java (Jenkins requires Java to run):
-
-sudo apt install openjdk-11-jdk -y
-
-Add the Jenkins repository and key:
-
-wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | sudo apt-key add -
-echo "deb https://pkg.jenkins.io/debian-stable binary/" | sudo tee /etc/apt/sources.list.d/jenkins.list
+    sudo apt update
+    
+    Install Java (Jenkins requires Java to run):
+    
+    sudo apt install openjdk-11-jdk -y
+    
+    Add the Jenkins repository and key:
+    
+    wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | sudo apt-key add -
+    echo "deb https://pkg.jenkins.io/debian-stable binary/" | sudo tee /etc/apt/sources.list.d/jenkins.list
 
 Install Jenkins:
 
