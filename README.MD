@@ -5,6 +5,20 @@ This repository demonstrates a robust implementation of a distributed microservi
 
 - [Project Structure](#project-structure)
 - [Services Overview](#services-overview)
+- [CI/CD Pipeline with Jenkins](#cicd-pipeline-with-jenkins)
+- [ CI/CD Diagram](#cicd-diagram)
+- [Deployment Process](#deployment-process)
+- [Nginx Configuration](#nginx-configuration)
+- [Testing](#testing)
+- [SonarQube Integration](#sonarqube-integration)
+- [Setting Up the Project from Scratch](#setting-up-the-project-from-scratch)
+  - [Setting Up Jenkins](#setting-up-jenkins)
+  - [Setting Up Docker and Docker Compose](#setting-up-docker-and-docker-compose)
+  - [Setting Up SonarQube Container](#setting-up-sonarqube-container)
+  - [Setting Up NPM and Project Dependencies](#setting-up-npm-and-project-dependencies)
+  - [Basic Git Setup](#basic-git-setup)
+- [Accessing the Application](#accessing-the-application)
+
 
 
 
@@ -53,7 +67,7 @@ User Service: Handles user profile and data management functionalities.
 Product Service: Provides access to product catalog information.
 Each service is developed with Node.js and Express.js, and containerized for scalable deployment.
 
-CI/CD Pipeline with Jenkins
+## CI/CD Pipeline with Jenkins
 
 Our CI/CD pipeline, defined in Jenkinsfile, automates the process of testing, building, and deploying the services. Key stages include:
 
@@ -66,42 +80,34 @@ Deploy to Development: Automated deployment to the development environment.
 Deploy to Production: Zero-downtime deployment to production using rolling updates.
 SonarQube Analysis: Conducting code quality and security scans.
 
-CI/CD Diagram
+## CI/CD Diagram
 ![alt text](diagram.jpg)
 
-Deployment Process
+## Deployment Process
 Deployments are automated via Jenkins, with manual steps provided for development and production environments:
 
 Development Deployment: docker-compose up -d
 
 Production Deployment: docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d --no-deps --build --force-recreate
 
-Nginx Configuration
+## Nginx Configuration
 
 The nginx/ directory contains configurations to route traffic to services, acting as a reverse proxy.
 
-Testing
+## Testing
 
 Integration testing is facilitated through Jest:
 npm run test
 
-SonarQube Integration
+## SonarQube Integration
 
 Continuous code quality and security assessments are performed via SonarQube, with configurations specified in sonar-project.properties.
 
-Accessing the Application
-
-Access the services through the Nginx reverse proxy by navigating to your domain or public IP:
-
-/auth/ routes to the auth-service.
-/users/ routes to the user-service.
-/products/ routes to the product-service.
-
-Setting Up the Project from Scratch
+## Setting Up the Project from Scratch
 
 To get started with this project on an Ubuntu server (e.g., an AWS EC2 instance), follow these steps to install and configure Jenkins, Docker, Docker Compose, SonarQube, NPM, and Git.
 
-Setting Up Jenkins
+### Setting Up Jenkins
 
 Update your package manage
 
@@ -137,7 +143,7 @@ Navigate to http://your_server_ip_or_domain:8080.
 Follow the instructions to complete the installation.
 
 
-Setting Up Docker and Docker Compose
+### Setting Up Docker and Docker Compose
 
 Install Docker:
 
@@ -165,7 +171,7 @@ sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-
 sudo chmod +x /usr/local/bin/docker-compose
 
 
-Setting Up SonarQube Container
+### Setting Up SonarQube Container
 
 Run SonarQube as a Docker container:
 
@@ -174,7 +180,7 @@ sudo docker run -d --name sonarqube -p 9000:9000 sonarqube
 Access SonarQube at http://your_server_ip_or_domain:9000.
 
 
-Setting Up NPM and Project Dependencies
+### Setting Up NPM and Project Dependencies
 
 
 Install Node.js and NPM:
@@ -195,7 +201,7 @@ Install dependencies specified in package.json:
 npm install
 
 
-Basic Git Setup
+### Basic Git Setup
 
 Install Git:
 
@@ -210,6 +216,15 @@ git config --global user.email "youremail@example.com"
 Clone your project (replace URL with your repository URL):
 
 git clone https://github.com/sabayneh1/docker-Distributed-System-with-Microservices-Architecture.git
+
+
+## Accessing the Application
+
+Access the services through the Nginx reverse proxy by navigating to your domain or public IP:
+
+/auth/ routes to the auth-service.
+/users/ routes to the user-service.
+/products/ routes to the product-service.
 
 This comprehensive setup guide ensures that all prerequisites for running the distributed microservices architecture project are met, providing a smooth start for developers and stakeholders.
 
