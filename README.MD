@@ -51,6 +51,9 @@ Docker Build and Push: Building Docker images and pushing them to a registry.
 Deploy to Development: Automated deployment to the development environment.
 Deploy to Production: Zero-downtime deployment to production using rolling updates.
 SonarQube Analysis: Conducting code quality and security scans.
+
+CI/CD Diagram
+![alt text](diagram.jpg)
 Deployment Process
 Deployments are automated via Jenkins, with manual steps provided for development and production environments:
 
