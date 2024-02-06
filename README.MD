@@ -19,23 +19,23 @@ This repository demonstrates a robust implementation of a distributed microservi
 - [Accessing the Application](#accessing-the-application)
 
 The project is structured as follows to ensure modularity and ease of maintenance:
-.
-├── auth-service/                 # Handles authentication and authorization
-├── user-service/                 # Manages user profiles and data
-├── product-service/              # Provides product catalog information
-├── nginx/                        # Nginx reverse proxy configuration
-├── docker-compose.yaml           # Docker Compose file for local development
-├── docker-compose.override.yml   # Overrides for Docker Compose
-├── docker-compose.prod.yaml      # Docker Compose file for production deployment
-├── Dockerfile                    # Dockerfile for building services
-├── Jenkinsfile                   # Jenkins pipeline definition
-├── sonar-project.properties      # SonarQube configuration
-├── package.json                  # Node.js dependencies and scripts
-├── package-lock.json             # Locked versions of Node.js dependencies
-├── app.js                        # Entry point for a mock service
-├── app.test.js                   # Integration tests
-└── entrypoint.sh                 # Custom entrypoint script for Docker
-
+'''.
+├── auth-service/ # Handles authentication and authorization
+├── user-service/ # Manages user profiles and data
+├── product-service/ # Provides product catalog information
+├── nginx/ # Nginx reverse proxy configuration
+├── docker-compose.yaml # Docker Compose file for local development
+├── docker-compose.override.yml # Overrides for Docker Compose
+├── docker-compose.prod.yaml # Docker Compose file for production deployment
+├── Dockerfile # Dockerfile for building services
+├── Jenkinsfile # Jenkins pipeline definition
+├── sonar-project.properties # SonarQube configuration
+├── package.json # Node.js dependencies and scripts
+├── package-lock.json # Locked versions of Node.js dependencies
+├── app.js # Entry point for a mock service
+├── app.test.js # Integration tests
+└── entrypoint.sh # Custom entrypoint script for Docker    
+'''
 
 
 Services Overview
