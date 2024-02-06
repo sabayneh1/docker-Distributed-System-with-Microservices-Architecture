@@ -21,6 +21,7 @@ This repository demonstrates a robust implementation of a distributed microservi
 The project is structured as follows to ensure modularity and ease of maintenance:
 
 '''├── auth-service/ # Handles authentication and authorization'''
+
 "├── user-service/ # Manages user profiles and data"
 "├── product-service/ # Provides product catalog information
 "├── nginx/ # Nginx reverse proxy configuration
